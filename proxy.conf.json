@@ -1,0 +1,8 @@
+{
+	"/bcstest/rest/indices/*": {
+		"target": "https://bcstest.mybluemix.net",
+		"secure": false,
+		"changeOrigin": true
+	}
+
+}

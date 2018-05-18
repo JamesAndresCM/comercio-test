@@ -1,0 +1,77 @@
+<span style="text-align: center"><h2>{{titulo}}</h2></span>
+<hr class="hr-st">
+<br>
+ <div class="example-container div-main">
+   <form #graficoForm="ngForm" class="example-container" [formGroup]="_graficoForm" (submit)="getGraficoData()">
+    	<mat-form-field>
+    		<mat-select placeholder="Seleccione periodo" [(ngModel)]="selectedValue" formControlName="periodo" required>
+      			<mat-option *ngFor="let per of periodo" [value]="per.value">
+        			{{per.viewValue}}
+      			</mat-option>
+    		</mat-select>
+  		</mat-form-field>
+  			&nbsp;
+          <mat-form-field>
+            <input matInput type="date" formControlName="f_desde" [(ngModel)]="f_desde" placeholder="Desde" required>
+          </mat-form-field>
+          	&nbsp;
+          <mat-form-field>
+            <input matInput type="date" formControlName="f_hasta" [(ngModel)]="f_hasta" placeholder="Hasta" required>
+          </mat-form-field>
+        <div class="row-center">
+           <button *ngIf="f_desde < f_hasta; else elseBlock" mat-raised-button color="primary" [disabled]="!graficoForm.form.valid">Filtrar</button>
+        </div>
+        <br>
+        <ng-template #elseBlock style="width: 450px; margin:0 auto;">
+            <div *ngIf="f_desde && f_hasta">
+              <mat-card-header>
+                <mat-toolbar class="toolbar">
+                  <mat-card-title>Precaución la Fecha Desde no puede ser mayor que Fecha Hasta &nbsp;</mat-card-title>
+                    <span class="toolbar-spacer"></span>
+                </mat-toolbar>
+              </mat-card-header>
+            </div> 
+        </ng-template>   
+    </form>
+  </div>
+<br>
+
+<div *ngIf="!dataSource" style="width: 450px; margin:0 auto;">
+  <mat-card-header>
+    <mat-toolbar class="toolbar">
+      <mat-card-title>No hay datos para mostrar gráfico por favor seleccione un rango &nbsp;</mat-card-title>
+      <span class="toolbar-spacer"></span>
+    </mat-toolbar>
+  </mat-card-header>
+</div>
+
+<div style="width:1300px; padding:20px;">
+    <div *ngIf="chart" style="width: 550px; float:left;">
+      <canvas id="canvas">{{ chart }}</canvas>
+    </div>
+
+    <div class="example-container mat-elevation-z4" style="width: 650px; float:right;">
+      <div>
+        <mat-table *ngIf="dataSource" class="capitalize" [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="indice">
+            <mat-header-cell *matHeaderCellDef>Indice</mat-header-cell>
+            <mat-cell *matCellDef="let comercio">{{comercio.value.indice}}</mat-cell>
+          </ng-container>
+        <ng-container matColumnDef="fecha">
+            <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+            <mat-cell *matCellDef="let comercio">{{comercio.value.fecha}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="ind_act">
+            <mat-header-cell *matHeaderCellDef>Valor actual del índice</mat-header-cell>
+            <mat-cell *matCellDef="let comercio">{{comercio.value.ind_act}}</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="ind_ant">
+            <mat-header-cell *matHeaderCellDef>Valor anterior del índice</mat-header-cell>
+            <mat-cell *matCellDef="let comercio">{{comercio.value.ind_ant}}</mat-cell>
+        </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns" color="primary"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+      </div>
+    </div>
+</div>

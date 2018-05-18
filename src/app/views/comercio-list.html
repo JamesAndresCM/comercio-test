@@ -1,0 +1,98 @@
+<span style="text-align: center"><h2>{{titulo}}</h2></span>
+<hr class="hr-st">
+<br>
+ <div class="example-container div-main">
+   <form #comercioForm="ngForm" class="example-container" [formGroup]="_comercioForm" (submit)="getComercioData()">
+    	<mat-form-field>
+    		<mat-select placeholder="Seleccione periodo" [(ngModel)]="selectedValue" formControlName="periodo" required>
+      			<mat-option *ngFor="let per of periodo" [value]="per.value">
+        			{{per.viewValue}}
+      			</mat-option>
+    		</mat-select>
+  		</mat-form-field>
+  			&nbsp;
+          <mat-form-field>
+            <input matInput type="date" formControlName="f_desde" [(ngModel)]="f_desde" placeholder="Desde" required>
+          </mat-form-field>
+          	&nbsp;
+          <mat-form-field>
+            <input matInput type="date" formControlName="f_hasta" [(ngModel)]="f_hasta" placeholder="Hasta" required>
+          </mat-form-field>
+        <div class="row-center">
+           <button  *ngIf="f_desde < f_hasta; else elseBlock" mat-raised-button color="primary" [disabled]="!comercioForm.form.valid">Filtrar</button>
+        </div>   
+        <br>
+        <ng-template #elseBlock style="width: 450px; margin:0 auto;">
+            <div *ngIf="f_desde && f_hasta">
+              <mat-card-header>
+                <mat-toolbar class="toolbar">
+                  <mat-card-title>Precaución la Fecha Desde no puede ser mayor que Fecha Hasta &nbsp;</mat-card-title>
+                    <span class="toolbar-spacer"></span>
+                </mat-toolbar>
+              </mat-card-header>
+            </div> 
+        </ng-template>
+    </form>
+  </div>
+  <br>
+
+<div *ngIf="!dataSource" style="width: 450px; margin:0 auto;">
+	<mat-card-header>
+    	<mat-toolbar class="toolbar">
+      		<mat-card-title>No hay datos para mostrar por favor seleccione un rango &nbsp;</mat-card-title>
+      		<span class="toolbar-spacer"></span>
+    	</mat-toolbar>
+	</mat-card-header>
+</div>
+<br>
+<div class="example-container mat-elevation-z8" style="width: 1300px; margin:0 auto;">
+	<div class="example-header">
+	    <mat-form-field>
+	      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar datos">
+	    </mat-form-field>
+	</div>
+	<div>
+		<mat-table class="capitalize" [dataSource]="dataSource" matSort>
+			<ng-container matColumnDef="indice">
+				<mat-header-cell *matHeaderCellDef mat-sort-header>Indice</mat-header-cell>
+				<mat-cell *matCellDef="let comercio">{{comercio.indice}}</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="fecha">
+				<mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</mat-header-cell>
+				<mat-cell *matCellDef="let comercio">{{comercio.fecha}}</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="ind_act">
+				<mat-header-cell *matHeaderCellDef mat-sort-header>Valor actual del índice</mat-header-cell>
+				<mat-cell *matCellDef="let comercio">{{comercio.ind_act}}</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="ind_ant">
+				<mat-header-cell *matHeaderCellDef mat-sort-header>Valor anterior del índice</mat-header-cell>
+				<mat-cell *matCellDef="let comercio">{{comercio.ind_ant}}</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="ind_may">
+				<mat-header-cell *matHeaderCellDef mat-sort-header>Valor Mayor</mat-header-cell>
+				<mat-cell *matCellDef="let comercio">{{comercio.ind_may}}</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="ind_men">
+				<mat-header-cell *matHeaderCellDef mat-sort-header>Valor Menor</mat-header-cell>
+				<mat-cell *matCellDef="let comercio">{{comercio.ind_men}}</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="ind_pro">
+				<mat-header-cell *matHeaderCellDef mat-sort-header>Valor Promedio</mat-header-cell>
+				<mat-cell *matCellDef="let comercio">{{comercio.ind_pro}}</mat-cell>
+			</ng-container>
+			<ng-container matColumnDef="ind_var">
+				<mat-header-cell *matHeaderCellDef mat-sort-header>Valor Porcentual</mat-header-cell>
+				<mat-cell *matCellDef="let comercio">{{comercio.ind_var}}</mat-cell>
+			</ng-container>
+			<mat-header-row *matHeaderRowDef="displayedColumns" color="primary"></mat-header-row>
+			<mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+		</mat-table>
+		<mat-paginator #paginator
+	                 [pageSize]="5"
+	                 [pageSizeOptions]="[5, 10, 20]"
+	                 [showFirstLastButtons]="true">
+	  </mat-paginator>
+	</div>
+</div>
+<br>
